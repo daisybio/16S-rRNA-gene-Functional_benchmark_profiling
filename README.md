@@ -1,1 +1,1 @@
-# 16S-rRNA-gene-Functional_benchmark_profiling
+# 16S-rRNA-gene-functional_benchmark_profiling
