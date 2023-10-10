@@ -17,19 +17,18 @@ if (!require('Tax4Fun2'))install.packages(pkgs = "Tax4Fun2_1.1.5.tar.gz", repos 
 nc=4
 #Input files
 #provide the path for Otu file and reference data
-otu_seq<-"C:/Users/selva/Documents/Cohort/16s_cnv_correction_databases-main/Collaboration/Custom Database/Tax4FUN/OTUs-Seqs.fasta"
-ref_path<-"C:/Users/selva/Documents/Cohort/16s_cnv_correction_databases-main/Collaboration/Custom Database/Tax4FUN2/Tax4Fun2_ReferenceData_v2/"
-otu_table_path<-"C:/Users/selva/Documents/Cohort/16s_cnv_correction_databases-main/Collaboration/Custom Database/Tax4FUN/seqtab_norm_EC_IRTREE.tsv"
+otu_seq<-"../Tax4FUN/OTUs-Seqs.fasta"
+ref_path<-"../Tax4FUN2/Tax4Fun2_ReferenceData_v2/"
+otu_table_path<-"../Tax4FUN/seqtab_norm_EC_IRTREE.tsv"
 
-buildReferenceData(path_to_working_directory = "C:/Users/selva/Documents/Cohort/16s_cnv_correction_databases-main/Collaboration/Custom Database/Tax4FUN/", use_force = FALSE, install_suggested_packages = TRUE)
+buildReferenceData(path_to_working_directory = "../Tax4FUN/", use_force = FALSE, install_suggested_packages = TRUE)
 testReferenceData(path_to_reference_data = "Tax4FUN2/Tax4Fun2_ReferenceData_v2/")
 buildDependencies(path_to_reference_data = ref_path, install_suggested_packages = TRUE,use_force=TRUE)
 #Run the reference blast
-runRefBlast(path_to_otus = otu_seq, path_to_reference_data = ref_path, path_to_temp_folder = "C:/Users/selva/Documents/Cohort/16s_cnv_correction_databases-main/Collaboration/Custom Database/Tax4FUN/Kelp_Ref99NR", database_mode = "Ref99NR", use_force = T, num_threads = nc)
+runRefBlast(path_to_otus = otu_seq, path_to_reference_data = ref_path, path_to_temp_folder = "../Tax4FUN/Kelp_Ref99NR", database_mode = "Ref99NR", use_force = T, num_threads = nc)
 
 # Predicting functional profiles
-makeFunctionalPrediction(path_to_otu_table = otu_table_path, path_to_reference_data = ref_path, path_to_temp_folder = "C:/Users/selva/Documents/Cohort/16s_cnv_correction_databases-main/Collaboration/Custom Database/Tax4FUN/Kelp_Ref99NR", database_mode = "Ref99NR", normalize_by_copy_number = TRUE, min_identity_to_reference = 0.97, normalize_pathways = TRUE)
-
+makeFunctionalPrediction(path_to_otu_table = otu_table_path, path_to_reference_data = ref_path, path_to_temp_folder = "../Tax4FUN/Kelp_Ref99NR", database_mode = "Ref99NR", normalize_by_copy_number = TRUE, min_identity_to_reference = 0.97, normalize_pathways = TRUE)
 
 ##################Additional Analysis################################################
 #Calculating (multi-)functional redundancy indices (experimental)
@@ -42,8 +41,6 @@ calculateFunctionalRedundancy(path_to_otu_table = otu_table_path, path_to_refere
 calculateFunctionalRedundancy(path_to_otu_table = otu_table_path, path_to_reference_data = ref_path, path_to_temp_folder = "Temp_Ref99NR", database_mode = "Ref99NR", min_identity_to_reference = 0.97, prevalence_cutoff = 1.0)
 
 
-
 #Output Files Needed for further analysis
-
 #Output from from functional prediction analysis: functional_prediction.txt
 #Output from from Pathway prediction analysis: pathway_prediction.txt
