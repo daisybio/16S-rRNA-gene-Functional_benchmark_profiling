@@ -21,21 +21,14 @@ KO_WGS<-dplyr::left_join(KO_WGS,map_data[,c(1,coln)])
 rownames(KO_WGS)<-KO_WGS$Sample_ID
 KO_WGS$Sample_ID<-NULL
 KO_WGS<-reshape2::melt(KO_WGS)
-colnames(KO_WGS)<-c("BMI_category","KO","Abundance")
+colnames(KO_WGS)<-c("CASE","KO","Abundance")
   
-Wilcox_wgs<-compare_means(Abundance ~ BMI_category,  data=KO_WGS, group.by = 'KO',
+Wilcox_wgs<-compare_means(Abundance ~ CASE,  data=KO_WGS, group.by = 'KO',
                             paired = FALSE, p.adjust.method = "BH",method = "wilcox.test") 
-  #Wilcox_wgs_BH<-compare_means(Abundance ~ BMI_category,  data=KO_WGS, group.by = 'KO',
-  #write.table(Wilcox_wgs,file="Wilcox_results_mgs_new.tsv",sep="\t",quote=FALSE,row.names = FALSE)
-  #paired = FALSE, p.adjust.method = "BH",method = "wilcox.test")
-  
-Wilcox_wgs_sig<-dplyr::filter(Wilcox_wgs,p<0.05)
-
 
 # List files with the specified prefix and suffix
 file_list <- list.files(c("KORA/"),pattern = "_REL_KO.tsv",full.names = TRUE)
 print(file_list)
-
 
 # Create a list to store shuffled matrices
 combined_matrices <- vector("list", length(file_list))
@@ -63,8 +56,8 @@ process_element <- function(j) {
   rownames(KO_table) <- KO_table$Sample_ID
   KO_table$Sample_ID <- NULL
   KO_table <- reshape2::melt(KO_table)
-  colnames(KO_table) <- c("BMI_category", "KO", "Abundance")
-  Wilcox_p1 <- ggpubr::compare_means(Abundance ~ BMI_category, data = KO_table, group.by = 'KO',
+  colnames(KO_table) <- c("CASE", "KO", "Abundance")
+  Wilcox_p1 <- ggpubr::compare_means(Abundance ~ CASE, data = KO_table, group.by = 'KO',
                                      paired = FALSE, p.adjust.method = "BH", method = "wilcox.test")
   Wilcox_p1_sig <- dplyr::filter(Wilcox_p1, p < 0.05)
   colnames(Wilcox_p1) <- paste(colnames(Wilcox_p1), "p1", sep = "_")
@@ -92,7 +85,7 @@ process_element <- function(j) {
   f1 <- 2 * precision * recall / (precision + recall)
   accuracy <- (tp + tn) / (tp + tn + fp + fn)
   result <- data.frame(
-   Method = sub("\\..*", "", names(combined_matrices)[j]),
+   Data = sub("\\..*", "", names(combined_matrices)[j]),
     precision = precision,
     recall = recall,
     f1 = f1,
@@ -105,5 +98,7 @@ process_element <- function(j) {
 result_list <- lapply(1:length(combined_matrices), process_element)
 # Combine the results into a single data frame
 result_df <- do.call(rbind, result_list)
-
+result_df$Cohort<-gsub("(.+?)(\\_.*)", "\\1", result_df$Data)
+result_df$Methods<-gsub("^[^_]*_([^_]+)_.*$", "\\1",result_df$Data)
+result_df$Pattern <- ifelse(grepl("CUSTOM", result_df$Data), "CUSTOM", "DEFAULT")
 write.table(result_df,file="differential_abundance_accuracy_matrix_KORA.tsv",sep="\t",quote=FALSE,row.names = FALSE)
