@@ -1,3 +1,5 @@
+##The following scripts were adapted and modified to generate distance matrix and PcoA plot from Parallel-Meta Suite: Interactive and rapid microbiome data analysis on multiple platforms  
+
 ## install necessary libraries
 p <- c("optparse","vegan", "ade4","ggplot2","grid")
 usePackage <- function(p) {
