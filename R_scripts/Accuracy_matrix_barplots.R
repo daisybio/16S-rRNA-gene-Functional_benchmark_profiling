@@ -3,10 +3,63 @@ library(ggplot2)
 library(stringr)
 library(reshape2)
 
+##########Figure 3: Comparison of significantly differentially abundant KOs between inferred and MGS results.#############
+
+file_list <- list.files(c("F:/Cohort/meta-apo/dataset1/simulation/"),pattern = "differential_abundance_accuracy_matrix_simulation_*",full.names = TRUE)
+print(file_list)
+accuracy_simulation <- do.call("rbind", lapply(file_list, FUN = function(file) {
+  read.table(file, header=TRUE, sep="\t")
+}))
+
+accuracy_s<-reshape2::melt(accuracy_simulation)
+colnames(accuracy_s)<-c("Data","Methods","Pattern","Nature","Metrices","Value")
+accuracy_s$Method_1<-paste0(accuracy_s$Methods,"_",accuracy_s$Pattern)
+accuracy_s<-dplyr::filter(accuracy_s,Metrices!="Accuracy")
+accuracy_s$Metrices<-str_to_title(accuracy_s$Metrices)
+levels(accuracy_s$Metrices)<-c("F1","Recall","Precision")
+accuracy_s$Pattern<-as.factor(accuracy_s$Pattern)
+levels(accuracy_s$Pattern)<-c("DEFAULT","CUSTOM")
+
+pdf("F:/Cohort/github/Figures/Figure_3_simulation_accuracy.pdf",width=120, height=50)
+ggplot(accuracy_s,aes(x=Method_1, y=Value, fill=Methods,pattern=Pattern)) +
+  geom_bar(stat="identity") +
+  geom_bar_pattern(stat = "identity",
+                   position = "stack",
+                   pattern_color = "white",
+                   color = "black",
+                   aes(pattern_color = white)) +
+  scale_pattern_manual(values = c(DEFAULT="none",CUSTOM = "stripe"))+
+  facet_grid(Metrices~ Nature, scales = "free", space = "free", switch="y") +
+  theme(panel.grid.major.x = element_blank(),
+        axis.line = element_line(colour = "black"),
+        axis.text.x = element_text(size=100,face="bold", hjust=1,angle=90),
+        axis.text.y= element_text(face="bold",size = 100),
+        strip.text.x = element_text(face="bold",size = 100),
+        legend.position = "none",
+        panel.spacing.x=unit(0.3, "lines") , panel.spacing.y=unit(7,"lines"),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(), 
+        strip.text = element_text(size=100, face="bold"),
+        legend.text=element_text(size=100,face="bold"),
+        legend.key.size = unit(1,"line"), 
+        legend.title=element_text(size=100, face="bold"),strip.background =element_rect(fill="#FFEAD2")
+  )+ scale_y_continuous(expand = c(0, 0), limits = c(0, 1))+
+  scale_fill_manual(values=c("#554994","#FF8DC7","#F29393","#FFCCB3"))+
+  scale_x_discrete(labels=c("METGEM_DEFAULT"= "Metgem","METGEM_CUSTOM" = "Metgem", 
+                            "PANFP_DEFAULT"= "PanFP","PANFP_CUSTOM" = "PanFP",
+                            "PICRUST2_DEFAULT"="PICRUSt2","PICRUST2_CUSTOM"="PICRUSt2",
+                            "TAX4FUN2_DEFAULT"="Tax4Fun2","TAX4FUN2_CUSTOM"="Tax4Fun2"))
+
+dev.off()
+
+
+
+
+
 ##########Figure 4: Comparison of detected KEGG terms between inferred metagenomes and MGS#############
 
 
-accuracy_quantitative<-read.table("../dataset/accuracy_matrix_quantitative.tsv",sep="\t",header=TRUE)
+accuracy_quantitative<-read.table("F:/Cohort/github/dataset/accuracy_matrix_quantitative.tsv",sep="\t",header=TRUE)
 accuracy_quantitative<-accuracy_quantitative[,c(1,7:9,11)]
 
 accuracy_q<-reshape2::melt(accuracy_quantitative)
