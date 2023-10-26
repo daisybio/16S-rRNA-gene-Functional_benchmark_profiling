@@ -1,11 +1,3 @@
-#################################################################
-# Function: PCoA
-# Call: Rscript PM_pcoa.R -m meta_data -d dist_file [-l T/F -o outfile -a axesfile]
-# R packages used: optparse vegan ggplot2 grid
-# Update: 2017-05-10, Zheng Sun, Yanhai Gong, Xiaoquan Su
-# Last update: 2020-10-18, Wang Honglei, Xiaoquan Su, Yufeng Zhang
-#################################################################
-
 ## install necessary libraries
 p <- c("optparse","vegan", "ade4","ggplot2","grid")
 usePackage <- function(p) {
