@@ -16,7 +16,7 @@ Individual folders are designated for each population cohort, with each file nam
 
 ## Processing Script Folder
 
-Contained within the "processing_script" folder are the scripts utilized to derive KO abundance from the aforementioned four tools, respectively.
+Contained within the "processing_script" folder are the scripts utilized to derive KO abundance from the aforementioned four tools, respectively. It also contains the script which is used to filter 16S rrNA gene sequences from simulated metagenome sequences using FilterRead pipeline. 
 
 ## R Script Folder
 
