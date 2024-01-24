@@ -1,4 +1,4 @@
-﻿
+Orginal: Greenfield (2018a) Greenfield P. FilterReads. 2018a. [1 August 2018]. https://github.com/PaulGreenfieldOz/WorkingDogs/tree/master/FilterReads﻿
 # FilterReads
 FilterReads is a fast kMer-based filter that pulls out matching reads from WGS datasets (or contigs from sets of contigs). Each read is tiled into kMers, and these are then matched against a set of kMer filters. Reads with sufficient numbers of matching kMers are kept (or discarded).  
 
