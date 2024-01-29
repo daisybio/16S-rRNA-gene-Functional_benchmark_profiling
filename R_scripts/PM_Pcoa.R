@@ -37,7 +37,7 @@ meta_orig$Nature=as.factor(meta_orig$Nature)
   sampleNumber <- length(rn)
 
   dst <- as.dist(da)
-  pcoa <- dudi.pco(dst, scan=FALSE, nf=3)
+  pcoa <- dudi.pca(dst, scan=FALSE, nf=3)
   #print(pcoa$li)
   loadings <- signif((pcoa$eig)[1:3] / sum(pcoa$eig)*100, digits=3)
   
